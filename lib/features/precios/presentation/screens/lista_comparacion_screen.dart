@@ -29,7 +29,7 @@ class _ListaComparacionScreenState
     final detalle = state.detalle;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Mi comparación')),
+      appBar: AppBar(title: const Text('Mi lista de compras')),
       body: () {
         if (state.cargando && detalle == null) {
           return const Center(child: CircularProgressIndicator());

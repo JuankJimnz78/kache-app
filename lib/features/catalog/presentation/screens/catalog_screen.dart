@@ -15,21 +15,77 @@ class CatalogScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(catalogProvider(tipo.value));
     final notifier = ref.read(catalogProvider(tipo.value).notifier);
+    final colorOscuro = Color.lerp(tipo.color, Colors.black, 0.25)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(tipo.label)),
+      backgroundColor: AppColors.background,
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              onChanged: notifier.buscar,
-              decoration: InputDecoration(
-                hintText: 'Buscar producto o marca...',
-                prefixIcon: Icon(Icons.search, color: tipo.color),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(12, 48, 20, 40),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [tipo.color, colorOscuro],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(28),
+                    bottomRight: Radius.circular(28),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Text(tipo.emoji, style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 8),
+                    Text(
+                      tipo.label,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Positioned(
+                left: 20,
+                right: 20,
+                bottom: -22,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4)),
+                    ],
+                  ),
+                  child: TextField(
+                    onChanged: notifier.buscar,
+                    decoration: InputDecoration(
+                      hintText: 'Buscar producto o marca...',
+                      prefixIcon: Icon(Icons.search, color: tipo.color),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 38),
           if (state.cargando)
             const Expanded(child: Center(child: CircularProgressIndicator()))
           else if (state.error != null)
@@ -49,13 +105,13 @@ class CatalogScreen extends ConsumerWidget {
           else
             Expanded(
               child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 itemCount: state.productos.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final producto = state.productos[index];
                   return InkWell(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(18),
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -63,22 +119,30 @@ class CatalogScreen extends ConsumerWidget {
                       );
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.border),
+                        color: tipo.color.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(
+                            color: tipo.color.withValues(alpha: 0.25)),
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: 44,
-                            height: 44,
+                            width: 46,
+                            height: 46,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: tipo.color.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.05),
+                                    blurRadius: 4),
+                              ],
                             ),
-                            child: Icon(tipo.icon, color: tipo.color, size: 22),
+                            child: Text(tipo.emoji,
+                                style: const TextStyle(fontSize: 20)),
                           ),
                           const SizedBox(width: 14),
                           Expanded(
@@ -87,19 +151,30 @@ class CatalogScreen extends ConsumerWidget {
                               children: [
                                 Text(producto.nombre,
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
                                 if (producto.marca.isNotEmpty)
-                                  Text(
-                                    producto.marca,
-                                    style: const TextStyle(
-                                        color: AppColors.textSecondary,
-                                        fontSize: 12),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 2),
+                                    child: Text(
+                                      producto.marca,
+                                      style: const TextStyle(
+                                          color: AppColors.textSecondary,
+                                          fontSize: 12),
+                                    ),
                                   ),
                               ],
                             ),
                           ),
-                          const Icon(Icons.chevron_right,
-                              color: AppColors.textFaint),
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: tipo.color.withValues(alpha: 0.18),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.compare_arrows,
+                                color: colorOscuro, size: 16),
+                          ),
                         ],
                       ),
                     ),

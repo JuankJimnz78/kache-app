@@ -3,18 +3,19 @@
 import 'package:flutter/material.dart';
 
 enum TipoComercio {
-  supermercado('supermercado', 'Supermercados', Color(0xFF4CAF50),
-      Icons.shopping_basket_outlined),
+  supermercado('supermercado', 'Super', Color(0xFF4CAF50),
+      Icons.shopping_basket_outlined, '🛒'),
   farmacia('farmacia', 'Farmacias', Color(0xFF26C6DA),
-      Icons.local_pharmacy_outlined),
-  ferreteria(
-      'ferreteria', 'Ferreterías', Color(0xFFEA580C), Icons.hardware_outlined);
+      Icons.local_pharmacy_outlined, '💊'),
+  ferreteria('ferreteria', 'Ferreterías', Color(0xFFEA580C),
+      Icons.hardware_outlined, '🔧');
 
-  const TipoComercio(this.value, this.label, this.color, this.icon);
+  const TipoComercio(this.value, this.label, this.color, this.icon, this.emoji);
   final String value;
   final String label;
   final Color color;
   final IconData icon;
+  final String emoji;
 
   static TipoComercio fromValue(String v) => TipoComercio.values
       .firstWhere((t) => t.value == v, orElse: () => TipoComercio.supermercado);
@@ -54,4 +55,24 @@ class Comercio {
         fechaFinDestacado: j['fecha_fin_destacado'] as String?,
         destacadoActivo: j['destacado_activo'] as bool,
       );
+
+  /// Devuelve el color de identidad de marca del comercio.
+  /// Si no hay color específico para ese comercio, usa el color del tipo.
+  Color get colorMarca {
+    switch (nombre.toLowerCase()) {
+      case 'supermaxi':
+        return const Color(0xFFE3000F);
+      case 'coral':
+        return const Color(0xFF003087);
+      case 'fybeca':
+        return const Color(0xFF00843D);
+      case 'sana sana':
+        return const Color(0xFF0066CC);
+      case 'kywi':
+        return const Color(0xFFE87722);
+      default:
+        return tipo
+            .color; // fallback al color del tipo si no tiene marca conocida
+    }
+  }
 }
