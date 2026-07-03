@@ -178,7 +178,7 @@ class HomeScreen extends ConsumerWidget {
                     const Text(
                       'Ahorra comparando antes de comprar',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
+                      style: TextStyle(color: Colors.white70, fontSize: 18),
                     ),
                   ],
                 ),
