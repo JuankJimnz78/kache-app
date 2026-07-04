@@ -3,19 +3,21 @@
 import 'package:flutter/material.dart';
 
 enum TipoComercio {
-  supermercado('supermercado', 'Super', Color(0xFF4CAF50),
-      Icons.shopping_basket_outlined, '🛒'),
+  supermercado('supermercado', 'Supermercados', Color(0xFF4CAF50),
+      Icons.shopping_basket_outlined, '🛒', 4),
   farmacia('farmacia', 'Farmacias', Color(0xFF26C6DA),
-      Icons.local_pharmacy_outlined, '💊'),
+      Icons.local_pharmacy_outlined, '💊', 5),
   ferreteria('ferreteria', 'Ferreterías', Color(0xFFEA580C),
-      Icons.hardware_outlined, '🔧');
+      Icons.hardware_outlined, '🔧', 6);
 
-  const TipoComercio(this.value, this.label, this.color, this.icon, this.emoji);
+  const TipoComercio(this.value, this.label, this.color, this.icon, this.emoji,
+      this.idCategoriaPadre);
   final String value;
   final String label;
   final Color color;
   final IconData icon;
   final String emoji;
+  final int idCategoriaPadre;
 
   static TipoComercio fromValue(String v) => TipoComercio.values
       .firstWhere((t) => t.value == v, orElse: () => TipoComercio.supermercado);

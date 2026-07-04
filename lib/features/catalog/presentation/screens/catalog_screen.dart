@@ -9,12 +9,17 @@ import '../../../precios/presentation/screens/precios_screen.dart';
 
 class CatalogScreen extends ConsumerWidget {
   final TipoComercio tipo;
-  const CatalogScreen({super.key, required this.tipo});
+  final int? idCategoria;
+  final String? nombreCategoria;
+  const CatalogScreen(
+      {super.key, required this.tipo, this.idCategoria, this.nombreCategoria});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(catalogProvider(tipo.value));
-    final notifier = ref.read(catalogProvider(tipo.value).notifier);
+    final providerKey =
+        idCategoria != null ? '${tipo.value}_$idCategoria' : tipo.value;
+    final state = ref.watch(catalogProvider(providerKey));
+    final notifier = ref.read(catalogProvider(providerKey).notifier);
     final colorOscuro = Color.lerp(tipo.color, Colors.black, 0.25)!;
 
     return Scaffold(
@@ -47,7 +52,7 @@ class CatalogScreen extends ConsumerWidget {
                     Text(tipo.emoji, style: const TextStyle(fontSize: 20)),
                     const SizedBox(width: 8),
                     Text(
-                      tipo.label,
+                      nombreCategoria ?? tipo.label,
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,

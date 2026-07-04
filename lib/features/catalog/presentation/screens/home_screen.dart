@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kache/features/catalog/presentation/screens/subcategoria_screen.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../comercios/domain/models/comercio.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -335,8 +336,8 @@ class _CategoriaTile extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => CatalogScreen(tipo: tipo)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => SubcategoriaScreen(tipo: tipo)));
       },
       child: Container(
         padding: const EdgeInsets.all(12),
