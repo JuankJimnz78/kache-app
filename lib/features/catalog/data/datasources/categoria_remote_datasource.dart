@@ -12,7 +12,8 @@ class CategoriaRemoteDatasource {
     try {
       final response = await _dio.get('/kache/categorias/');
       final data = response.data as Map<String, dynamic>;
-      return (data['results'] as List)
+      final lista = data['results'] ?? data['resultados'];
+      return (lista as List)
           .map((e) => Categoria.fromJson(e as Map<String, dynamic>))
           .toList();
     } on DioException catch (_) {

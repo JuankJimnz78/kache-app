@@ -11,6 +11,29 @@ class SubcategoriaScreen extends ConsumerWidget {
   final TipoComercio tipo;
   const SubcategoriaScreen({super.key, required this.tipo});
 
+  static const _colores = [
+    Color(0xFF26C6DA),
+    Color(0xFF66BB6A),
+    Color(0xFFFF7043),
+    Color(0xFF7E57C2),
+    Color(0xFFEF5350),
+    Color(0xFF26A69A),
+    Color(0xFFFFCA28),
+    Color(0xFF42A5F5),
+  ];
+
+  static const _emojis = {
+    'Vitaminas y Suplementos': '💊',
+    'Gripes y Resfriados': '🤧',
+    'Cuidado Personal': '🧴',
+    'Medicamentos': '💉',
+    'Lacteos': '🥛',
+    'Leches': '🥛',
+    'Ofertas': '🏷️',
+    'Bebidas': '🧃',
+    'Snacks': '🍿',
+  };
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subcategoriasAsync =
@@ -21,7 +44,6 @@ class SubcategoriaScreen extends ConsumerWidget {
       backgroundColor: AppColors.background,
       body: Column(
         children: [
-          // ── Encabezado ──────────────────────────────────────
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(12, 48, 20, 24),
@@ -55,8 +77,6 @@ class SubcategoriaScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 20),
-
-          // ── Subcategorías ────────────────────────────────────
           Expanded(
             child: subcategoriasAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -89,6 +109,10 @@ class SubcategoriaScreen extends ConsumerWidget {
                   itemCount: subcategorias.length,
                   itemBuilder: (context, index) {
                     final cat = subcategorias[index];
+                    final color = _colores[index % _colores.length];
+                    final colorOscuroLocal =
+                        Color.lerp(color, Colors.black, 0.25)!;
+
                     return InkWell(
                       borderRadius: BorderRadius.circular(20),
                       onTap: () => Navigator.of(context).push(
@@ -105,13 +129,13 @@ class SubcategoriaScreen extends ConsumerWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           gradient: LinearGradient(
-                            colors: [tipo.color, colorOscuro],
+                            colors: [color, colorOscuroLocal],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: tipo.color.withValues(alpha: 0.3),
+                              color: color.withValues(alpha: 0.3),
                               blurRadius: 12,
                               offset: const Offset(0, 6),
                             ),
@@ -128,8 +152,10 @@ class SubcategoriaScreen extends ConsumerWidget {
                                 color: Colors.white.withValues(alpha: 0.22),
                                 borderRadius: BorderRadius.circular(16),
                               ),
-                              child: Text(tipo.emoji,
-                                  style: const TextStyle(fontSize: 24)),
+                              child: Text(
+                                _emojis[cat.nombre] ?? tipo.emoji,
+                                style: const TextStyle(fontSize: 24),
+                              ),
                             ),
                             const SizedBox(height: 10),
                             Text(

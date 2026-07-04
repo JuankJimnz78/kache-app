@@ -136,18 +136,24 @@ class CatalogScreen extends ConsumerWidget {
                           Container(
                             width: 46,
                             height: 46,
-                            alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: tipo.color.withValues(alpha: 0.14),
                               borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.05),
-                                    blurRadius: 4),
-                              ],
                             ),
-                            child: Text(tipo.emoji,
-                                style: const TextStyle(fontSize: 20)),
+                            clipBehavior: Clip.hardEdge,
+                            child: producto.imagenUrl != null
+                                ? Image.network(
+                                    producto.imagenUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Center(
+                                      child: Text(tipo.emoji,
+                                          style: const TextStyle(fontSize: 20)),
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(tipo.emoji,
+                                        style: const TextStyle(fontSize: 20)),
+                                  ),
                           ),
                           const SizedBox(width: 14),
                           Expanded(

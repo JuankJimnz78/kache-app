@@ -50,9 +50,14 @@ class CatalogNotifier extends StateNotifier<CatalogState> {
   Future<void> cargar() async {
     state = state.copyWith(cargando: true, error: null);
     try {
+      final partes = tipoComercio.split('_');
+      final tipo = partes[0];
+      final idCategoria = partes.length > 1 ? int.tryParse(partes[1]) : null;
+
       final resultado = await _repository.listar(
-        tipo: tipoComercio,
+        tipo: tipo,
         buscar: state.busqueda.isEmpty ? null : state.busqueda,
+        categoria: idCategoria,
       );
       state = state.copyWith(productos: resultado.results, cargando: false);
     } catch (e) {
