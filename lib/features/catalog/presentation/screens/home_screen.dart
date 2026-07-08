@@ -9,6 +9,7 @@ import '../../../../core/theme/app_colors.dart';
 import 'catalog_screen.dart';
 import '../../../precios/presentation/screens/lista_comparacion_screen.dart';
 import 'package:video_player/video_player.dart';
+import '../../../../core/widgets/fondo_patron.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -46,82 +47,7 @@ class HomeScreen extends ConsumerWidget {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          // ── Íconos grandes y translúcidos de fondo (no fotos) ──────
-          Positioned(
-            top: 130,
-            right: -30,
-            child: Transform.rotate(
-              angle: -0.3,
-              child: Icon(
-                TipoComercio.supermercado.icon,
-                size: 150,
-                color: TipoComercio.supermercado.color.withValues(alpha: 0.08),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 350,
-            left: -40,
-            child: Transform.rotate(
-              angle: 0.2,
-              child: Icon(
-                TipoComercio.farmacia.icon,
-                size: 130,
-                color: TipoComercio.farmacia.color.withValues(alpha: 0.08),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 30,
-            right: -20,
-            child: Transform.rotate(
-              angle: 0.15,
-              child: Icon(
-                TipoComercio.ferreteria.icon,
-                size: 120,
-                color: TipoComercio.ferreteria.color.withValues(alpha: 0.08),
-              ),
-            ),
-          ),
-
-          Positioned(
-            bottom: 60,
-            right: 20,
-            child: Transform.rotate(
-              angle: 0.30,
-              child: Icon(
-                TipoComercio.ferreteria.icon,
-                size: 120,
-                color: TipoComercio.ferreteria.color.withValues(alpha: 0.08),
-              ),
-            ),
-          ),
-
-          Positioned(
-            top: 175,
-            left: 40,
-            child: Transform.rotate(
-              angle: 0.4,
-              child: Icon(
-                TipoComercio.farmacia.icon,
-                size: 130,
-                color: TipoComercio.farmacia.color.withValues(alpha: 0.08),
-              ),
-            ),
-          ),
-
-          Positioned(
-            top: 75,
-            right: 30,
-            child: Transform.rotate(
-              angle: -0.6,
-              child: Icon(
-                TipoComercio.supermercado.icon,
-                size: 150,
-                color: TipoComercio.supermercado.color.withValues(alpha: 0.08),
-              ),
-            ),
-          ),
+          const FondoPatron(),
 
           // ── Contenido real ──────────────────────────────────────
           Column(
@@ -177,7 +103,7 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     const Text(
-                      'Ahorra comparando antes de comprar',
+                      'Ahorra COMPARANDO antes de comprar',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white70, fontSize: 18),
                     ),
@@ -196,10 +122,11 @@ class HomeScreen extends ConsumerWidget {
                         const SizedBox(height: 24),
                         const Text(
                           '¿Qué quieres comparar hoy?',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               color: AppColors.textPrimary,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                              fontSize: 20),
                         ),
                         const SizedBox(height: 14),
                         GridView.count(
@@ -267,7 +194,7 @@ class _AnuncioVideoState extends State<_AnuncioVideo> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 180,
+      height: 150,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -382,4 +309,80 @@ class _CategoriaTile extends StatelessWidget {
       ),
     );
   }
+}
+
+// Agrega esta clase al final del archivo home_screen.dart
+
+class _PatronPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final iconos = [
+      Icons.shopping_basket_outlined,
+      Icons.local_pharmacy_outlined,
+      Icons.hardware_outlined,
+      Icons.compare_arrows,
+      Icons.attach_money,
+      Icons.storefront_outlined,
+      Icons.discount_outlined,
+      Icons.receipt_outlined,
+      Icons.price_check,
+      Icons.savings_outlined,
+      Icons.sell_outlined,
+      Icons.qr_code_scanner,
+      Icons.percent,
+      Icons.shopping_cart_outlined,
+      Icons.inventory_2_outlined,
+      Icons.star_outline,
+    ];
+
+    const color = Color(0xFFD4A843);
+    const espaciado = 50.0;
+    const iconSize = 80.0;
+
+    var fila = 0;
+    for (double y = 40; y < size.height; y += espaciado) {
+      var col = 0;
+      final offsetX = (fila % 2 == 0) ? 0.0 : espaciado / 2;
+      for (double x = offsetX; x < size.width + espaciado; x += espaciado) {
+        final icono = iconos[(fila * 3 + col * 7) % iconos.length];
+
+        final seed = fila * 31 + col * 17;
+        final dx = ((seed * 13) % 30).toDouble() - 15;
+        final dy = ((seed * 7) % 24).toDouble() - 12;
+        final angulo = ((seed * 11) % 628) / 100.0;
+
+        canvas.save();
+        canvas.translate(x + dx, y + dy);
+        canvas.rotate(angulo);
+        _dibujarIcono(canvas, icono, Offset.zero, iconSize,
+            color.withValues(alpha: 0.12));
+        canvas.restore();
+
+        col++;
+      }
+      fila++;
+    }
+  }
+
+  void _dibujarIcono(
+      Canvas canvas, IconData icon, Offset center, double size, Color color) {
+    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+    textPainter.text = TextSpan(
+      text: String.fromCharCode(icon.codePoint),
+      style: TextStyle(
+        fontSize: size,
+        fontFamily: icon.fontFamily,
+        package: icon.fontPackage,
+        color: color,
+      ),
+    );
+    textPainter.layout();
+    textPainter.paint(
+      canvas,
+      center - Offset(textPainter.width / 2, textPainter.height / 2),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

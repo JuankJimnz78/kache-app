@@ -9,6 +9,7 @@ import '../../../catalog/domain/models/producto.dart';
 import '../../../comercios/domain/models/comercio.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/fondo_patron.dart';
 import 'lista_comparacion_screen.dart';
 
 class PreciosScreen extends ConsumerWidget {
@@ -21,129 +22,128 @@ class PreciosScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Comparar precios')),
-      body: preciosAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, __) => const Center(
-          child: Text('No se pudieron cargar los precios.',
-              style: TextStyle(color: AppColors.error)),
-        ),
-        data: (precios) {
-          if (precios.isEmpty) {
-            return const Center(
-              child: Text(
-                'Todavía no hay precios registrados para este producto.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.textSecondary),
-              ),
-            );
-          }
-          return Column(
-            children: [
-              // ── Encabezado con nombre completo del producto ──────
-              Builder(
-                builder: (context) {
-                  // Tomamos el color del primer precio (el más barato)
-                  final precioBarato = precios.first;
-                  final comercioBarato = precioBarato.comercioDetalle;
-                  final tipoBarato = comercioBarato != null
-                      ? TipoComercio.fromValue(comercioBarato.tipo)
-                      : TipoComercio.supermercado;
-                  final colorBarato = comercioBarato != null
-                      ? Comercio(
-                          id: comercioBarato.id,
-                          nombre: comercioBarato.nombre,
-                          tipo: tipoBarato,
-                          activo: true,
-                          destacado: false,
-                          destacadoActivo: false,
-                        ).colorMarca
-                      : tipoBarato.color;
-                  final colorOscuro =
-                      Color.lerp(colorBarato, Colors.black, 0.3)!;
+      body: Stack(
+        children: [
+          const FondoPatron(),
+          preciosAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => const Center(
+              child: Text('No se pudieron cargar los precios.',
+                  style: TextStyle(color: AppColors.error)),
+            ),
+            data: (precios) {
+              if (precios.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'Todavía no hay precios registrados para este producto.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.textSecondary),
+                  ),
+                );
+              }
+              return Column(
+                children: [
+                  Builder(
+                    builder: (context) {
+                      final precioBarato = precios.first;
+                      final comercioBarato = precioBarato.comercioDetalle;
+                      final tipoBarato = comercioBarato != null
+                          ? TipoComercio.fromValue(comercioBarato.tipo)
+                          : TipoComercio.supermercado;
+                      final colorBarato = comercioBarato != null
+                          ? Comercio(
+                              id: comercioBarato.id,
+                              nombre: comercioBarato.nombre,
+                              tipo: tipoBarato,
+                              activo: true,
+                              destacado: false,
+                              destacadoActivo: false,
+                            ).colorMarca
+                          : tipoBarato.color;
+                      final colorOscuro =
+                          Color.lerp(colorBarato, Colors.black, 0.3)!;
 
-                  return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [colorBarato, colorOscuro],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [colorBarato, colorOscuro],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              producto.nombre,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            if (producto.marca.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                producto.marca,
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 8),
+                            const Center(
+                              child: Text(
+                                'Elige el comercio donde quieres comprarlo',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  const Divider(height: 1),
+                  Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                      itemCount: precios.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        final precio = precios[index];
+                        final esElMasBarato = index == 0 && precios.length > 1;
+                        return _PrecioCard(
+                            producto: producto,
+                            precio: precio,
+                            esElMasBarato: esElMasBarato);
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.shopping_cart_outlined),
+                      label: const Text('Ir a mis listas de compras'),
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const ListaComparacionScreen()),
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          producto.nombre,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        if (producto.marca.isNotEmpty) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            producto.marca,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: 10),
-                        const Center(
-                          child: Text(
-                            'Elige el comercio donde quieres comprarlo',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              const Divider(height: 1),
-
-              // ── Tarjetas de precios ───────────────────────────────
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                  itemCount: precios.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final precio = precios[index];
-                    final esElMasBarato = index == 0 && precios.length > 1;
-                    return _PrecioCard(
-                        producto: producto,
-                        precio: precio,
-                        esElMasBarato: esElMasBarato);
-                  },
-                ),
-              ),
-
-              // ── Botón ir a lista ──────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.shopping_cart_outlined),
-                  label: const Text('Ir a mis listas de compras'),
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (_) => const ListaComparacionScreen()),
                   ),
-                ),
-              ),
-            ],
-          );
-        },
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }
