@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'core/theme/app_theme.dart';
-import 'core/theme/app_colors.dart';
-import 'features/auth/presentation/providers/auth_provider.dart';
-import 'features/auth/presentation/screens/login_screen.dart';
-import 'features/catalog/presentation/screens/home_screen.dart';
+import 'package:kache/theme/app_theme.dart';
+import 'package:kache/theme/app_colors.dart';
+import 'package:kache/presentation/providers/auth_provider.dart';
+import 'package:kache/presentation/screens/auth/login_screen.dart';
+import 'package:kache/presentation/screens/home_screen.dart';
 
 void main() {
   runApp(
