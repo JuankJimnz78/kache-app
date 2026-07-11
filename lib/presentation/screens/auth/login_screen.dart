@@ -51,18 +51,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Kache',
+                    'PreciosEC',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium
-                        ?.copyWith(color: AppColors.accent),
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                        color: const Color.fromARGB(255, 255, 165, 0)),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Compara precios entre comercios',
+                    'COMPARA precios entre comercios',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: const TextStyle(color: Colors.blue),
                   ),
                   const SizedBox(height: 40),
                   if (authState.errorMessage != null) ...[
@@ -109,6 +107,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 255, 165, 0),
+                      foregroundColor: Colors.white,
+                    ),
                     onPressed: isLoading ? null : _submit,
                     child: isLoading
                         ? const SizedBox(
@@ -116,13 +118,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: AppColors.onAccent,
+                              color: Color.fromARGB(255, 4, 16, 252),
                             ),
                           )
                         : const Text('Iniciar sesión'),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 255, 165, 0),
+                    ),
                     onPressed: isLoading
                         ? null
                         : () => Navigator.of(context).push(

@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 
 enum TipoComercio {
-  supermercado('supermercado', 'Supermercados', Color(0xFF4CAF50),
+  supermercado('supermercado', 'Supermercados', const Color(0x404CAF50),
       Icons.shopping_basket_outlined, '🛒', 8),
-  farmacia('farmacia', 'Farmacias', Color(0xFF26C6DA),
+  farmacia('farmacia', 'Farmacias', Color(0x4026C6DA),
       Icons.local_pharmacy_outlined, '💊', 9),
   ferreteria('ferreteria', 'Ferreterías', Color(0xFFEA580C),
       Icons.hardware_outlined, '🔧', 10);

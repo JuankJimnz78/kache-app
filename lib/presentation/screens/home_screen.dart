@@ -53,46 +53,22 @@ class HomeScreen extends ConsumerWidget {
           Column(
             children: [
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 56, 20, 28),
+                padding: const EdgeInsets.fromLTRB(50, 40, 50, 28),
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 223, 131, 3),
-                      Color.fromARGB(255, 48, 51, 251)
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: Color.fromARGB(255, 255, 165, 0),
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(28),
-                    bottomRight: Radius.circular(28),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
                   ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        const Text('Kache',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold)),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.list_alt, color: Colors.white),
-                          tooltip: 'Mi lista de compras',
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => const ListaComparacionScreen()),
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.logout, color: Colors.white),
-                          onPressed: () => _confirmarCerrarSesion(context, ref),
-                        ),
-                      ],
-                    ),
+                    const Text('',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
                     Text(
                       '¡Hola, ${user?.username ?? ''}! 👋',
@@ -121,7 +97,7 @@ class HomeScreen extends ConsumerWidget {
                         const _AnuncioVideo(),
                         const SizedBox(height: 24),
                         const Text(
-                          '¿Qué quieres comparar hoy?',
+                          '¿Qué quieres COMPARAR hoy?',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: AppColors.textPrimary,
@@ -335,7 +311,7 @@ class _PatronPainter extends CustomPainter {
       Icons.star_outline,
     ];
 
-    const color = Color(0xFFD4A843);
+    const color = Color(0x40D4A843);
     const espaciado = 50.0;
     const iconSize = 80.0;
 
