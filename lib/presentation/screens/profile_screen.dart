@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kache/presentation/providers/auth_provider.dart';
 import 'package:kache/theme/app_colors.dart';
-import 'package:kache/core/widgets/fondo_patron.dart';
+import 'package:kache/presentation/widgets/fondo_patron.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -12,88 +12,160 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
+    final username = user?.username ?? '';
+    final email = user?.email ?? '';
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 250, 244, 248),
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
           const FondoPatron(),
           SafeArea(
             child: Column(
               children: [
-                // ── Encabezado ──────────────────────────────────
+                // ── Encabezado con rombos y PreciosEC ───────────
+                const EncabezadoPreciosEC(titulo: 'Mi Perfil'),
+                const SizedBox(height: 16),
+
+                // ── Avatar y datos del usuario ───────────────────
                 Container(
-                  padding: const EdgeInsets.fromLTRB(130, 10, 130, 10),
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 255, 165, 0),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15),
-                    ),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.border),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  child: Column(
+                  child: Row(
                     children: [
                       Container(
-                        width: 80,
-                        height: 80,
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(
-                          color: Colors.blue.withValues(alpha: 1),
+                          color: const Color(0xFF1A237E).withValues(alpha: 0.12),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.person,
-                            size: 44, color: Colors.white),
+                            size: 32, color: Color(0xFF1A237E)),
                       ),
-                      const SizedBox(height: 12),
-                      Text(
-                        user?.username ?? '',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        user?.email ?? '',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              username,
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              email,
+                              style: const TextStyle(
+                                  fontSize: 13,
+                                  color: AppColors.textSecondary),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
 
                 // ── Opciones ─────────────────────────────────────
                 Expanded(
                   child: ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     children: [
+                      // Mi cuenta
                       _OpcionTile(
                         icono: Icons.person_outline,
                         titulo: 'Mi cuenta',
                         subtitulo: 'Información personal',
-                        onTap: () {},
+                        color: const Color(0xFF1565C0),
+                        onTap: () => _mostrarDialogo(
+                          context,
+                          titulo: 'Mi cuenta',
+                          contenido:
+                              'Usuario: $username\nCorreo: $email',
+                          icono: Icons.person_outline,
+                          color: const Color(0xFF1565C0),
+                        ),
                       ),
+                      const SizedBox(height: 10),
+
+                      // Notificaciones
                       _OpcionTile(
                         icono: Icons.notifications_outlined,
                         titulo: 'Notificaciones',
-                        subtitulo: 'Alertas de precios',
-                        onTap: () {},
+                        subtitulo: 'Alertas de precios y ofertas',
+                        color: const Color(0xFFFF8F00),
+                        onTap: () => _mostrarDialogo(
+                          context,
+                          titulo: 'Notificaciones',
+                          contenido:
+                              'Próximamente podrás configurar alertas cuando el precio de un producto baje en cualquier comercio.',
+                          icono: Icons.notifications_outlined,
+                          color: const Color(0xFFFF8F00),
+                        ),
                       ),
+                      const SizedBox(height: 10),
+
+                      // Ayuda
                       _OpcionTile(
                         icono: Icons.help_outline,
                         titulo: 'Ayuda',
                         subtitulo: '¿Cómo usar PreciosEC?',
-                        onTap: () {},
+                        color: const Color(0xFF2E7D32),
+                        onTap: () => _mostrarDialogo(
+                          context,
+                          titulo: 'Ayuda',
+                          contenido:
+                              '1. Elige una categoría (Supermercados, Farmacias o Ferreterías)\n\n'
+                              '2. Selecciona una subcategoría\n\n'
+                              '3. Toca un producto para ver sus precios en distintos comercios\n\n'
+                              '4. Toca "Elegir este" para agregar a tu lista de compras\n\n'
+                              '5. En "Mi Lista" puedes pedir delivery o ver dónde recoger',
+                          icono: Icons.help_outline,
+                          color: const Color(0xFF2E7D32),
+                        ),
                       ),
+                      const SizedBox(height: 10),
+
+                      // Acerca de PreciosEC
                       _OpcionTile(
                         icono: Icons.info_outline,
                         titulo: 'Acerca de PreciosEC',
                         subtitulo: 'Versión 1.0.0',
-                        onTap: () {},
+                        color: const Color(0xFF6A1B9A),
+                        onTap: () => _mostrarDialogo(
+                          context,
+                          titulo: 'Acerca de PreciosEC',
+                          contenido:
+                              'PreciosEC es un comparador de precios para Ecuador.\n\n'
+                              'Compara precios entre supermercados, farmacias y ferreterías para que siempre encuentres la mejor oferta antes de comprar.\n\n'
+                              'Versión: 1.0.0\n'
+                              'Desarrollado por: Equipo PreciosEC\n'
+                              'Universidad: UTE',
+                          icono: Icons.info_outline,
+                          color: const Color(0xFF6A1B9A),
+                        ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
                       const Divider(),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
+
+                      // Cerrar sesión
                       _OpcionTile(
                         icono: Icons.logout,
                         titulo: 'Cerrar sesión',
@@ -104,6 +176,8 @@ class ProfileScreen extends ConsumerWidget {
                             context: context,
                             builder: (context) => AlertDialog(
                               backgroundColor: AppColors.surface,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
                               title: const Text('Cerrar sesión'),
                               content: const Text(
                                   '¿Seguro que quieres salir de tu cuenta?'),
@@ -117,7 +191,8 @@ class ProfileScreen extends ConsumerWidget {
                                   onPressed: () =>
                                       Navigator.of(context).pop(true),
                                   child: const Text('Cerrar sesión',
-                                      style: TextStyle(color: AppColors.error)),
+                                      style: TextStyle(
+                                          color: AppColors.error)),
                                 ),
                               ],
                             ),
@@ -127,11 +202,57 @@ class ProfileScreen extends ConsumerWidget {
                           }
                         },
                       ),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _mostrarDialogo(
+    BuildContext context, {
+    required String titulo,
+    required String contenido,
+    required IconData icono,
+    required Color color,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icono, color: color, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Text(titulo,
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Text(
+          contenido,
+          style: const TextStyle(
+              color: AppColors.textSecondary, fontSize: 14, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cerrar'),
           ),
         ],
       ),
@@ -144,43 +265,67 @@ class _OpcionTile extends StatelessWidget {
   final String titulo;
   final String subtitulo;
   final VoidCallback onTap;
-  final Color? color;
+  final Color color;
 
   const _OpcionTile({
     required this.icono,
     required this.titulo,
     required this.subtitulo,
     required this.onTap,
-    this.color,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    final c = color ?? AppColors.textPrimary;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: ListTile(
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: c.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icono, color: c, size: 20),
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        title: Text(titulo,
-            style: TextStyle(fontWeight: FontWeight.w600, color: c)),
-        subtitle: Text(subtitulo,
-            style:
-                const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-        trailing: Icon(Icons.chevron_right, color: c.withValues(alpha: 0.5)),
-        onTap: onTap,
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icono, color: color, size: 20),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(titulo,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: color == AppColors.error
+                              ? AppColors.error
+                              : AppColors.textPrimary)),
+                  Text(subtitulo,
+                      style: const TextStyle(
+                          color: AppColors.textSecondary, fontSize: 12)),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right,
+                color: color.withValues(alpha: 0.5)),
+          ],
+        ),
       ),
     );
   }

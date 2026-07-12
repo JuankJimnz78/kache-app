@@ -6,6 +6,7 @@ import 'package:kache/presentation/providers/auth_provider.dart';
 import 'package:kache/presentation/screens/auth/register_screen.dart';
 import 'package:kache/theme/app_colors.dart';
 import 'package:kache/core/utils/validators.dart';
+import 'package:kache/presentation/widgets/fondo_patron.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -50,11 +51,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Center(
+                    child: SizedBox(
+                      height: 30,
+                      width: 200,
+                      child: CustomPaint(
+                        painter: TiraRombosCentradoPainter(),
+                      ),
+                    ),
+                  ),
                   Text(
                     'PreciosEC',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        color: const Color.fromARGB(255, 255, 165, 0)),
+                          color: const Color(0xFF1A237E),
+                        ),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -108,8 +119,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 165, 0),
-                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF1A237E),
+                      foregroundColor: Colors.yellow,
                     ),
                     onPressed: isLoading ? null : _submit,
                     child: isLoading
@@ -126,7 +137,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 16),
                   TextButton(
                     style: TextButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 255, 165, 0),
+                      foregroundColor: Colors.red,
                     ),
                     onPressed: isLoading
                         ? null
