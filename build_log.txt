@@ -1,0 +1,6 @@
+No supported devices connected.
+
+The following devices were found, but are not supported by this project:
+Chrome (web) ΓÇó chrome ΓÇó web-javascript ΓÇó Google Chrome 149.0.7827.201
+Edge (web)   ΓÇó edge   ΓÇó web-javascript ΓÇó Microsoft Edge 149.0.4022.69
+If you would like your app to run on web, consider running `flutter create .` to generate projects for these platforms.
