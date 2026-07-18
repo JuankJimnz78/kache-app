@@ -41,6 +41,7 @@ class AuthRepositoryImpl implements AuthRepository {
         'username': user.username,
         'email': user.email,
         'is_staff': user.isStaff,
+        'rol': user.rol,
       },
     );
     return user;

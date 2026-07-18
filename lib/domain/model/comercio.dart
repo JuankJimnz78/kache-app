@@ -58,6 +58,37 @@ class Comercio {
         destacadoActivo: j['destacado_activo'] as bool,
       );
 
+  Map<String, dynamic> toJson() => {
+        'nombre': nombre,
+        'tipo': tipo.value,
+        'logo_url': logoUrl,
+        'sitio_web': sitioWeb,
+        'activo': activo,
+        'destacado': destacado,
+        'fecha_fin_destacado': fechaFinDestacado,
+      };
+
+  Comercio copyWith({
+    String? nombre,
+    TipoComercio? tipo,
+    String? logoUrl,
+    String? sitioWeb,
+    bool? activo,
+    bool? destacado,
+    String? fechaFinDestacado,
+  }) =>
+      Comercio(
+        id: id,
+        nombre: nombre ?? this.nombre,
+        tipo: tipo ?? this.tipo,
+        logoUrl: logoUrl ?? this.logoUrl,
+        sitioWeb: sitioWeb ?? this.sitioWeb,
+        activo: activo ?? this.activo,
+        destacado: destacado ?? this.destacado,
+        fechaFinDestacado: fechaFinDestacado ?? this.fechaFinDestacado,
+        destacadoActivo: destacadoActivo,
+      );
+
   /// Devuelve el color de identidad de marca del comercio.
   /// Si no hay color específico para ese comercio, usa el color del tipo.
   Color get colorMarca {

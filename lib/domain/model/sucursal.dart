@@ -46,4 +46,29 @@ class Sucursal {
         ? ComercioLigero.fromJson(j['comercio_detalle'] as Map<String, dynamic>)
         : null,
   );
+
+  Map<String, dynamic> toJson() => {
+        'id_comercio': idComercio,
+        'nombre_sucursal': nombreSucursal,
+        'ciudad': ciudad,
+        'direccion': direccion,
+        'activo': activo,
+      };
+
+  Sucursal copyWith({
+    int? idComercio,
+    String? nombreSucursal,
+    String? ciudad,
+    String? direccion,
+    bool? activo,
+  }) =>
+      Sucursal(
+        id: id,
+        idComercio: idComercio ?? this.idComercio,
+        nombreSucursal: nombreSucursal ?? this.nombreSucursal,
+        ciudad: ciudad ?? this.ciudad,
+        direccion: direccion ?? this.direccion,
+        activo: activo ?? this.activo,
+        comercioDetalle: comercioDetalle,
+      );
 }

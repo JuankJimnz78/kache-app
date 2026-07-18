@@ -144,7 +144,7 @@ class _AnuncioVideoState extends State<_AnuncioVideo> {
     super.initState();
     _controller = VideoPlayerController.networkUrl(
       Uri.parse(
-          'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
+          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'),
     );
     _controller.initialize().then((_) {
       if (!mounted) return;
