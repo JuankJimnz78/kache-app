@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kache/presentation/providers/auth_provider.dart';
+import 'package:kache/presentation/navigation/app_router.dart';
 import 'package:kache/theme/app_colors.dart';
 import 'package:kache/presentation/widgets/fondo_patron.dart';
 
@@ -74,6 +75,30 @@ class ProfileScreen extends ConsumerWidget {
                                   fontSize: 13,
                                   color: AppColors.textSecondary),
                             ),
+                            if (user != null && user.rol != 'CLIENTE') ...[
+                              const SizedBox(height: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: (user.esAdmin
+                                          ? const Color(0xFF6A1B9A)
+                                          : const Color(0xFF1565C0))
+                                      .withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  user.esAdmin ? 'Administrador' : 'Operador',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: user.esAdmin
+                                        ? const Color(0xFF6A1B9A)
+                                        : const Color(0xFF1565C0),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),
@@ -120,6 +145,21 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
+
+                      // Panel de administración (solo ADMIN u OPERADOR)
+                      if (user?.puedeAdministrar == true) ...[
+                        _OpcionTile(
+                          icono: Icons.admin_panel_settings_outlined,
+                          titulo: 'Panel de administración',
+                          subtitulo: user!.esAdmin
+                              ? 'Gestionar comercios, productos y precios'
+                              : 'Gestionar productos y precios',
+                          color: const Color(0xFF37474F),
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(AppRoutes.admin),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
 
                       // Ayuda
                       _OpcionTile(

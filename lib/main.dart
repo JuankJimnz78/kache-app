@@ -12,6 +12,7 @@ import 'package:kache/presentation/screens/home_screen.dart';
 import 'package:kache/presentation/screens/explorar_screen.dart';
 import 'package:kache/presentation/screens/comparador/lista_comparacion_screen.dart';
 import 'package:kache/presentation/screens/profile_screen.dart';
+import 'package:kache/presentation/navigation/app_router.dart';
 
 void main() {
   runApp(const ProviderScope(child: KacheApp()));
@@ -27,6 +28,7 @@ class KacheApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: const AuthGate(),
+      onGenerateRoute: AppRouter.generateRoute,
     );
   }
 }

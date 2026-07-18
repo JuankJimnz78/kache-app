@@ -47,6 +47,34 @@ class Precio {
                 j['comercio_detalle'] as Map<String, dynamic>)
             : null,
       );
+
+  Map<String, dynamic> toJson() => {
+        'id_producto': idProducto,
+        'id_comercio': idComercio,
+        'precio_actual': precioActual,
+        'precio_oferta': precioOferta,
+        'en_oferta': enOferta,
+      };
+
+  Precio copyWith({
+    int? idProducto,
+    int? idComercio,
+    double? precioActual,
+    double? precioOferta,
+    bool? enOferta,
+  }) =>
+      Precio(
+        id: id,
+        idProducto: idProducto ?? this.idProducto,
+        idComercio: idComercio ?? this.idComercio,
+        precioActual: precioActual ?? this.precioActual,
+        precioOferta: precioOferta ?? this.precioOferta,
+        enOferta: enOferta ?? this.enOferta,
+        precioEfectivo: precioEfectivo,
+        fechaActualizacion: fechaActualizacion,
+        productoDetalle: productoDetalle,
+        comercioDetalle: comercioDetalle,
+      );
 }
 
 class PaginatedPrecios {
